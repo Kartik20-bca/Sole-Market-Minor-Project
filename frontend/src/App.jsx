@@ -814,7 +814,7 @@ function App() {
                     fontSize: "19px",
                   }}
                 >
-                  Estimated Delivery
+                  Estimated Delivery in 4-5 Days
                 </h3>
 
                 <p
