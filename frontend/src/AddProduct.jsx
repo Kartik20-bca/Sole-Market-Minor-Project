@@ -29,7 +29,7 @@ function AddProduct({ onProductAdded }) {
       .filter((size) => size !== "");
 
     axios
-      .post("http://localhost:5001/api/products", {
+      .post("https://sole-market-backend.onrender.com/api/products", {
         name: form.name,
         brand: form.brand,
         price: Number(form.price),
