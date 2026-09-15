@@ -29,7 +29,7 @@ function AddProduct({ onProductAdded }) {
       .filter((size) => size !== "");
 
     axios
-      .post("http://localhost:5000/api/products", {
+      .post("http://localhost:5001/api/products", {
         name: form.name,
         brand: form.brand,
         price: Number(form.price),
