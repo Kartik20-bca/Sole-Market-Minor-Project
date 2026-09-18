@@ -800,15 +800,6 @@ function App() {
     setShowAuth(false);
   };
 
-  const fillOwnerCredentials = () => {
-    setAuthRoleTab("owner");
-    setAuthForm({
-      name: "Sole Market Owner",
-      email: "admin@solemarket.com",
-      password: "Admin@12345",
-    });
-  };
-
   const handleProductAdded = (newProduct) => {
     setProducts((prev) => [newProduct, ...prev]);
   };
@@ -1985,7 +1976,9 @@ function App() {
                   type="button"
                   onClick={() => {
                     setAuthRoleTab("owner");
-                    fillOwnerCredentials();
+                    setAuthMode("login");
+                    setAuthForm({ name: "", email: "", password: "" });
+                    setAuthError("");
                     setShowAuth(true);
                   }}
                   style={{
@@ -2036,7 +2029,10 @@ function App() {
               <button
                 type="button"
                 onClick={() => {
-                  fillOwnerCredentials();
+                  setAuthRoleTab("owner");
+                  setAuthMode("login");
+                  setAuthForm({ name: "", email: "", password: "" });
+                  setAuthError("");
                   setShowAuth(true);
                 }}
                 style={{
@@ -2815,7 +2811,10 @@ function App() {
               <button
                 type="button"
                 onClick={() => {
-                  fillOwnerCredentials();
+                  setAuthRoleTab("owner");
+                  setAuthMode("login");
+                  setAuthForm({ name: "", email: "", password: "" });
+                  setAuthError("");
                 }}
                 style={{
                   padding: "10px",
@@ -3027,26 +3026,6 @@ function App() {
                   </div>
                 </div>
 
-                {/* Auto Fill credentials button for Owner */}
-                <button
-                  type="button"
-                  onClick={fillOwnerCredentials}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    marginBottom: "14px",
-                    borderRadius: "8px",
-                    border: "1px solid #444",
-                    background: "#222",
-                    color: "#ffb03a",
-                    fontSize: "12px",
-                    fontWeight: "700",
-                    cursor: "pointer",
-                  }}
-                >
-                  ⚡ Auto-Fill Demo Credentials (admin@solemarket.com)
-                </button>
-
                 <form onSubmit={handleAuthSubmit}>
                   {authError && (
                     <div
@@ -3080,7 +3059,7 @@ function App() {
                     <input
                       type="email"
                       name="email"
-                      placeholder="admin@solemarket.com"
+                      placeholder="Enter owner email"
                       value={authForm.email}
                       onChange={handleAuthChange}
                       required
@@ -3110,7 +3089,7 @@ function App() {
                     <input
                       type="password"
                       name="password"
-                      placeholder="Owner Password"
+                      placeholder="Enter owner password"
                       value={authForm.password}
                       onChange={handleAuthChange}
                       required
