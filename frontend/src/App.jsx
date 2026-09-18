@@ -3027,38 +3027,6 @@ function App() {
                   </div>
                 </div>
 
-                {/* Direct Instant Developer Access Button */}
-                <button
-                  type="button"
-                  onClick={loginAsDirectOwner}
-                  style={{
-                    width: "100%",
-                    padding: "13px",
-                    marginBottom: "14px",
-                    borderRadius: "10px",
-                    border: "none",
-                    background: "linear-gradient(135deg, #00b09b, #96c93d)",
-                    color: "#000",
-                    fontWeight: "900",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                    boxShadow: "0 4px 15px rgba(0, 176, 155, 0.3)",
-                  }}
-                >
-                  ⚡ 1-Click Instant Developer / Owner Access
-                </button>
-
-                <div
-                  style={{
-                    textAlign: "center",
-                    color: "#666",
-                    fontSize: "12px",
-                    marginBottom: "14px",
-                  }}
-                >
-                  ── OR LOGIN WITH CREDENTIALS ──
-                </div>
-
                 {/* Auto Fill credentials button for Owner */}
                 <button
                   type="button"
