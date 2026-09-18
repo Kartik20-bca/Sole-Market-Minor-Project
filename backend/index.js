@@ -1,3 +1,4 @@
+const authRoutes = require("./routes/authRoutes");
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -9,13 +10,15 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log('MongoDB connection error:', err));
 
 // Routes
+
 const productRoutes = require('./routes/productRoutes');
 app.use('/api/products', productRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get('/', (req, res) => {
   res.send('SoleMarket API is running!');
