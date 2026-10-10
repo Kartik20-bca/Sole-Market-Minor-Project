@@ -322,14 +322,39 @@ function App() {
     return () => clearInterval(slideTimer);
   }, []);
 
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("solemarket_user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(() => localStorage.getItem("solemarket_token") || "");
 
-  const [token, setToken] = useState(() => {
-    return localStorage.getItem("solemarket_token") || "";
-  });
+  // Never trust a role restored from browser storage. Verify the token and role with the API.
+  useEffect(() => {
+    localStorage.removeItem("solemarket_registered_users");
+    const savedToken = localStorage.getItem("solemarket_token");
+
+    if (!savedToken) {
+      localStorage.removeItem("solemarket_user");
+      setUser(null);
+      setToken("");
+      return;
+    }
+
+    axios.get(`${AUTH_URL}/me`, {
+      headers: { Authorization: `Bearer ${savedToken}` },
+      timeout: 15000,
+    }).then((res) => {
+      const verifiedUser = res.data?.user;
+      if (!verifiedUser || !verifiedUser.id) {
+        throw new Error("Invalid session response");
+      }
+      localStorage.setItem("solemarket_user", JSON.stringify(verifiedUser));
+      setUser(verifiedUser);
+      setToken(savedToken);
+    }).catch(() => {
+      localStorage.removeItem("solemarket_user");
+      localStorage.removeItem("solemarket_token");
+      setUser(null);
+      setToken("");
+    });
+  }, []);
 
   const [showAuth, setShowAuth] = useState(false);
   const [authRoleTab, setAuthRoleTab] = useState("visitor"); // "visitor" | "owner"
@@ -648,9 +673,9 @@ function App() {
       role: "user",
     };
     localStorage.setItem("solemarket_user", JSON.stringify(guestUser));
-    localStorage.setItem("solemarket_token", "guest_session_token");
+    localStorage.removeItem("solemarket_token");
     setUser(guestUser);
-    setToken("guest_session_token");
+    setToken("");
     setShowAuth(false);
   };
 
