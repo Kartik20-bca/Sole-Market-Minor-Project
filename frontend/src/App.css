@@ -8425,17 +8425,31 @@ textarea {
   object-position: center;
 }
 
-/* Center the desktop search bar between the logo and header actions. */
+/* Keep the logo, search field, and actions in separate header columns. */
 @media (min-width: 901px) {
   .header {
-    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(220px, 500px) auto;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: clamp(16px, 2vw, 32px);
+    position: sticky;
   }
 
   .header .search-box {
-    position: absolute;
-    left: 50%;
-    margin-left: 0;
-    transform: translateX(-50%);
+    position: static;
+    justify-self: center;
+    width: 100%;
+    min-width: 0;
+    max-width: 500px;
+    margin: 0;
+    transform: none;
+  }
+
+  .header .header-actions {
+    justify-self: end;
+    min-width: 0;
+    flex-wrap: nowrap;
   }
 }
 
