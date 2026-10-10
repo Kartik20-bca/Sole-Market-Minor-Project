@@ -12,7 +12,10 @@ const protect = (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    const jwtSecret = process.env.JWT_SECRET || "solemarket_jwt_secret_dev_key";
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return res.status(503).json({ message: "Authentication is not configured on the server." });
+    }
     const decoded = jwt.verify(token, jwtSecret);
 
     req.user = decoded;
