@@ -8425,3 +8425,17 @@ textarea {
   object-position: center;
 }
 
+/* Center the desktop search bar between the logo and header actions. */
+@media (min-width: 901px) {
+  .header {
+    position: relative;
+  }
+
+  .header .search-box {
+    position: absolute;
+    left: 50%;
+    margin-left: 0;
+    transform: translateX(-50%);
+  }
+}
+
