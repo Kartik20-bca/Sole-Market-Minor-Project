@@ -11,6 +11,12 @@ router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    // Fail before creating a database record if signing tokens is not configured.
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return res.status(503).json({ message: "Authentication is not configured on the server." });
+    }
+
     if (!name || !email || !password) {
       return res.status(400).json({
         message: "All fields (Name, Email, Password) are required.",
@@ -43,10 +49,6 @@ router.post("/register", async (req, res) => {
       role: "user",
     });
 
-    const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-      return res.status(503).json({ message: "Authentication is not configured on the server." });
-    }
     const token = jwt.sign(
       {
         id: user._id,
