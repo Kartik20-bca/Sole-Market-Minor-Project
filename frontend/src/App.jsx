@@ -21,7 +21,7 @@ const HERO_SLIDES = [
     price: "₹16,999",
     description: "The silhouette that redefined street footwear culture forever with crimson and obsidian full-grain leather.",
     accentColor: "#ff4336",
-    bgImage: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=1920&q=85",
+    bgImage: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=1000&q=90",
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const HERO_SLIDES = [
     price: "₹9,695",
     description: "Monochromatic streetwear essential crafted with clean contrasting geometric panel overlays.",
     accentColor: "#ffffff",
-    bgImage: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1920&q=85",
+    bgImage: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=85&sat=-10",
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const HERO_SLIDES = [
     price: "₹32,999",
     description: "Engineered aerodynamic chassis featuring responsive quantum-foam propulsion and carbon composite heel stabilizer.",
     accentColor: "#00d2ff",
-    bgImage: "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=1920&q=85",
+    bgImage: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=90&sat=-15",
   },
   {
     id: 4,
@@ -54,7 +54,7 @@ const HERO_SLIDES = [
     price: "₹13,995",
     description: "The holy grail of air cushioning. Bold color-blocking and responsive stride performance.",
     accentColor: "#ff5b35",
-    bgImage: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1920&q=85",
+    bgImage: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=1000&q=90&sat=-20",
   },
   {
     id: 5,
@@ -65,7 +65,7 @@ const HERO_SLIDES = [
     price: "₹22,999",
     description: "Engineered seamless cyber-knit upper bonded to a responsive energy-return cellular matrix.",
     accentColor: "#a855f7",
-    bgImage: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1920&q=85",
+    bgImage: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1000&q=90&sat=10",
   },
   {
     id: 6,
@@ -76,59 +76,35 @@ const HERO_SLIDES = [
     price: "₹14,999",
     description: "Futuristic sculpted wavy midsole equipped with dual-density hydro-cushioning architecture.",
     accentColor: "#38bdf8",
-    bgImage: "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?auto=format&fit=crop&w=1920&q=85",
+    bgImage: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1000&q=90&sat=15",
   },
+];
+
+const FRESH_SHOE_IMAGES = [
+  "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=90",
+  "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=1000&q=90",
+  "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1000&q=90",
+  "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=1000&q=90",
+  "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=1000&q=90",
+  "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=85&sat=-10",
+  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=90&sat=-15",
+  "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=1000&q=90&sat=-20",
+  "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1000&q=90&sat=10",
+  "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1000&q=90&sat=15",
+  "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=1000&q=90&sat=-10",
+  "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=1000&q=90&sat=10",
+  "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=1000&q=90&sat=20",
+  "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?auto=format&fit=crop&w=1000&q=90&sat=-10",
+  "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&w=1000&q=90"
 ];
 
 const getFallbackShoeImage = (brand, name = "") => {
   const query = `${brand || ""} ${name || ""}`.toLowerCase();
-  
-  if (query.includes("volt") || query.includes("quantum") || query.includes("stryke") || query.includes("travis") || query.includes("mocha") || query.includes("cactus")) {
-    return "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=800&q=80";
+  let hash = 0;
+  for (let i = 0; i < query.length; i += 1) {
+    hash = (hash * 31 + query.charCodeAt(i)) >>> 0;
   }
-  if (query.includes("shadow") || query.includes("onyx") || query.includes("350") || query.includes("yeezy")) {
-    return "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("550") || query.includes("emerald") || query.includes("chrono")) {
-    return "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("solaris") || query.includes("9000") || query.includes("9060") || query.includes("cloud")) {
-    return "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("quad") || query.includes("stealth") || query.includes("jordan 4") || query.includes("military")) {
-    return "https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("neo-stride") || query.includes("crimson") || query.includes("chicago") || query.includes("jordan")) {
-    return "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("cyberpulse") || query.includes("phantom") || query.includes("panda") || query.includes("dunk")) {
-    return "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("vortex") || query.includes("aero force") || query.includes("air force") || query.includes("af1")) {
-    return "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("bubble") || query.includes("aero max") || query.includes("air max")) {
-    return "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("kinetic") || query.includes("cobalt") || query.includes("puma") || query.includes("suede")) {
-    return "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("echo") || query.includes("rider") || query.includes("skate") || query.includes("vans")) {
-    return "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("all-star") || query.includes("canvas") || query.includes("converse") || query.includes("parchment")) {
-    return "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("astral") || query.includes("velocity") || query.includes("asics") || query.includes("kayano")) {
-    return "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("cyan") || query.includes("indoor") || query.includes("gazelle") || query.includes("samba")) {
-    return "https://images.unsplash.com/photo-1520256862855-398228c41684?auto=format&fit=crop&w=800&q=80";
-  }
-  if (query.includes("zero-g") || query.includes("deconstructed") || query.includes("presto") || query.includes("off-white")) {
-    return "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80";
-  }
-  return "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80";
+  return FRESH_SHOE_IMAGES[hash % FRESH_SHOE_IMAGES.length];
 };
 
 const DEFAULT_SNEAKERS = [
@@ -139,7 +115,7 @@ const DEFAULT_SNEAKERS = [
     category: "High-Top",
     price: 16999,
     description: "The silhouette that redefined street footwear culture forever with crimson and obsidian full-grain leather.",
-    imageUrl: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=90",
     size: ["7", "8", "9", "10", "11"],
     stock: 15,
   },
@@ -150,7 +126,7 @@ const DEFAULT_SNEAKERS = [
     category: "Streetwear",
     price: 9695,
     description: "Monochromatic streetwear essential crafted with clean contrasting geometric panel overlays.",
-    imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=1000&q=90",
     size: ["6", "7", "8", "9", "10", "11"],
     stock: 25,
   },
@@ -161,7 +137,7 @@ const DEFAULT_SNEAKERS = [
     category: "Exclusive Drop",
     price: 32999,
     description: "Engineered aerodynamic chassis featuring responsive quantum-foam propulsion and carbon composite heel stabilizer.",
-    imageUrl: "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1000&q=90",
     size: ["7", "8", "9", "10", "11"],
     stock: 8,
   },
@@ -172,7 +148,7 @@ const DEFAULT_SNEAKERS = [
     category: "Retro Court",
     price: 11999,
     description: "Clean retro basketball low-top styling with vintage accents and premium leather construction.",
-    imageUrl: "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=1000&q=90",
     size: ["7", "8", "9", "10", "11"],
     stock: 12,
   },
@@ -183,7 +159,7 @@ const DEFAULT_SNEAKERS = [
     category: "Air Cushion",
     price: 7495,
     description: "The definition of crisp everyday swagger equipped with proprietary Vortex-Air cushioning chambers.",
-    imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=1000&q=90",
     size: ["6", "7", "8", "9", "10", "11", "12"],
     stock: 30,
   },
@@ -194,7 +170,7 @@ const DEFAULT_SNEAKERS = [
     category: "Hyper-Comfort",
     price: 22999,
     description: "Engineered seamless cyber-knit upper bonded to a responsive energy-return cellular matrix.",
-    imageUrl: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=85&sat=-10",
     size: ["8", "9", "10", "11"],
     stock: 8,
   },
@@ -205,7 +181,7 @@ const DEFAULT_SNEAKERS = [
     category: "High-Top",
     price: 19999,
     description: "Color-blocked architectural structure featuring TPU cage wings and signature dual-window cushioning.",
-    imageUrl: "https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=90&sat=-15",
     size: ["7", "8", "9", "10", "11"],
     stock: 10,
   },
@@ -216,7 +192,7 @@ const DEFAULT_SNEAKERS = [
     category: "Casual Luxury",
     price: 5499,
     description: "Ultra-soft brushed Italian suede upper with reinforced arch support for an effortless elevated stride.",
-    imageUrl: "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=1000&q=90&sat=-20",
     size: ["6", "7", "8", "9", "10"],
     stock: 20,
   },
@@ -227,7 +203,7 @@ const DEFAULT_SNEAKERS = [
     category: "Y2K Sculpture",
     price: 14999,
     description: "Futuristic sculpted wavy midsole equipped with dual-density hydro-cushioning architecture.",
-    imageUrl: "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1000&q=90&sat=10",
     size: ["7", "8", "9", "10", "11"],
     stock: 14,
   },
@@ -238,7 +214,7 @@ const DEFAULT_SNEAKERS = [
     category: "Skatewear",
     price: 4999,
     description: "Heavy-duty canvas and reinforced suede toe guards with high-grip diamond tread outsoles.",
-    imageUrl: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1000&q=90&sat=15",
     size: ["6", "7", "8", "9", "10", "11"],
     stock: 35,
   },
@@ -249,7 +225,7 @@ const DEFAULT_SNEAKERS = [
     category: "Archival High",
     price: 5999,
     description: "Heavyweight vintage canvas, archival rubber taping, and extra cushioning for all-day comfort.",
-    imageUrl: "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=1000&q=90&sat=-10",
     size: ["6", "7", "8", "9", "10", "11"],
     stock: 22,
   },
@@ -260,7 +236,7 @@ const DEFAULT_SNEAKERS = [
     category: "Visible Air",
     price: 13995,
     description: "The Holy Grail of sneaker lore with the oversized visible four-chamber Air window.",
-    imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=1000&q=90&sat=10",
     size: ["7", "8", "9", "10", "11"],
     stock: 16,
   },
@@ -271,7 +247,7 @@ const DEFAULT_SNEAKERS = [
     category: "Aerodynamic",
     price: 12999,
     description: "Late 2000s aesthetic equipped with signature segmented shock-dampening gel pods.",
-    imageUrl: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=1000&q=90&sat=20",
     size: ["7", "8", "9", "10", "11"],
     stock: 15,
   },
@@ -282,7 +258,7 @@ const DEFAULT_SNEAKERS = [
     category: "Retro Training",
     price: 9999,
     description: "Plush premium suede upper, translucent gum rubber outsole, and retro indoor training vibes.",
-    imageUrl: "https://images.unsplash.com/photo-1520256862855-398228c41684?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?auto=format&fit=crop&w=1000&q=90&sat=-10",
     size: ["6", "7", "8", "9", "10"],
     stock: 18,
   },
@@ -293,7 +269,7 @@ const DEFAULT_SNEAKERS = [
     category: "Skate Pro",
     price: 10295,
     description: "Supple full-suede finish in autumnal wheat hues with Zoom impact heel unit for board control.",
-    imageUrl: "https://images.unsplash.com/photo-1588117260148-b47818741c74?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&w=1000&q=90",
     size: ["7", "8", "9", "10", "11"],
     stock: 11,
   },
@@ -304,7 +280,7 @@ const DEFAULT_SNEAKERS = [
     category: "Exclusive Drop",
     price: 36999,
     description: "Avant-garde architectural deconstructed sneaker featuring exposed foam collars and industrial hangtags.",
-    imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=90",
     size: ["7", "8", "9", "10", "11"],
     stock: 7,
   },
@@ -448,11 +424,17 @@ function App() {
             return item;
           });
 
+          // Give each product a fresh, distinct image, regardless of old database URLs.
+          const transformedWithFreshImages = transformed.map((item, idx) => ({
+            ...item,
+            imageUrl: FRESH_SHOE_IMAGES[idx % FRESH_SHOE_IMAGES.length],
+          }));
+
           // Deduplicate transformed sneakers by name and append any missing curated items
           const seenNames = new Set();
           const deduplicated = [];
 
-          for (const item of transformed) {
+          for (const item of transformedWithFreshImages) {
             const normName = (item.name || "").trim().toLowerCase();
             if (!seenNames.has(normName)) {
               seenNames.add(normName);
