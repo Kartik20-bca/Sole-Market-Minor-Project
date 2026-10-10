@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -42,7 +43,10 @@ router.post("/register", async (req, res) => {
       role: "user",
     });
 
-    const jwtSecret = process.env.JWT_SECRET || "solemarket_jwt_secret_dev_key";
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return res.status(503).json({ message: "Authentication is not configured on the server." });
+    }
     const token = jwt.sign(
       {
         id: user._id,
@@ -88,17 +92,6 @@ router.post("/login", async (req, res) => {
     const cleanEmail = email.trim().toLowerCase();
     let user = await User.findOne({ email: cleanEmail });
 
-    // Auto-create default admin/owner if logging in for the first time
-    if (!user && cleanEmail === "admin@solemarket.com" && password === "Admin@12345") {
-      const hashedPassword = await bcrypt.hash("Admin@12345", 10);
-      user = await User.create({
-        name: "Sole Market Owner & Dev",
-        email: "admin@solemarket.com",
-        password: hashedPassword,
-        role: "admin",
-      });
-    }
-
     if (!user) {
       return res.status(401).json({
         message: "Invalid email or password.",
@@ -116,7 +109,10 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const jwtSecret = process.env.JWT_SECRET || "solemarket_jwt_secret_dev_key";
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return res.status(503).json({ message: "Authentication is not configured on the server." });
+    }
 
     const token = jwt.sign(
       {
@@ -146,6 +142,29 @@ router.post("/login", async (req, res) => {
     res.status(500).json({
       message: "Login failed.",
     });
+  }
+});
+
+
+// Return the authenticated user's current database role, not a role trusted from browser storage.
+router.get("/me", protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(401).json({ message: "Session is no longer valid. Please sign in again." });
+    }
+
+    res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Session verification error:", error);
+    res.status(500).json({ message: "Unable to verify the current session." });
   }
 });
 
