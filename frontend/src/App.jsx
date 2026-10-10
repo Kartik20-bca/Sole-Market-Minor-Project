@@ -366,7 +366,7 @@ function App() {
               return { ...item, name: "Neo-Stride Apex High 'Crimson Eclipse'", brand: "Neo-Stride", category: "High-Top", imageUrl: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=800&q=80", description: "The silhouette that redefined street footwear culture forever with crimson and obsidian full-grain leather." };
             }
             if (raw.includes("panda") || (raw.includes("dunk") && !raw.includes("sb") && !raw.includes("wheat"))) {
-              return { ...item, name: "CyberPulse Low 'Monochrome Phantom'", brand: "CyberPulse", category: "Streetwear", imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80", description: "Monochromatic streetwear essential crafted with clean contrasting geometric panel overlays." };
+              return { ...item, name: "CyberPulse Low 'Monochrome Phantom'", brand: "CyberPulse", category: "Streetwear", imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=90", description: "Monochromatic streetwear essential crafted with clean contrasting geometric panel overlays." };
             }
             if (raw.includes("volt") || raw.includes("quantum") || raw.includes("stryke") || raw.includes("travis") || raw.includes("mocha") || raw.includes("cactus") || raw.includes("samba")) {
               return { ...item, name: "Volt Stryke 'Quantum Cyan Pro'", brand: "Volt Stryke", category: "Exclusive Drop", imageUrl: "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=800&q=80", description: "Engineered aerodynamic chassis featuring responsive quantum-foam propulsion and carbon composite heel stabilizer." };
@@ -375,10 +375,10 @@ function App() {
               return { ...item, name: "Chrono Drip 550 'Emerald Heritage'", brand: "Chrono Drip", category: "Retro Court", imageUrl: "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=800&q=80", description: "Clean retro basketball low-top styling with vintage accents and premium leather construction." };
             }
             if (raw.includes("force 1") || raw.includes("af1")) {
-              return { ...item, name: "Vortex Aero 1 'Pure Obsidian'", brand: "Vortex Aero", category: "Air Cushion", imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80", description: "The definition of crisp everyday swagger equipped with proprietary Vortex-Air cushioning chambers." };
+              return { ...item, name: "Vortex Aero 1 'Pure Obsidian'", brand: "Vortex Aero", category: "Air Cushion", imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=90", description: "The definition of crisp everyday swagger equipped with proprietary Vortex-Air cushioning chambers." };
             }
             if (raw.includes("350") || raw.includes("onyx") || raw.includes("yeezy")) {
-              return { ...item, name: "Shadow Forge Boost 'Dark Onyx'", brand: "Shadow Forge", category: "Hyper-Comfort", imageUrl: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80", description: "Engineered seamless cyber-knit upper bonded to a responsive energy-return cellular matrix." };
+              return { ...item, name: "Shadow Forge Boost 'Dark Onyx'", brand: "Shadow Forge", category: "Hyper-Comfort", imageUrl: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=90", description: "Engineered seamless cyber-knit upper bonded to a responsive energy-return cellular matrix." };
             }
             if (raw.includes("jordan 4") || raw.includes("military")) {
               return { ...item, name: "Neo-Stride Quad-Retro 'Stealth Slate'", brand: "Neo-Stride", category: "High-Top", imageUrl: "https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?auto=format&fit=crop&w=800&q=80", description: "Color-blocked architectural structure featuring TPU cage wings and signature dual-window cushioning." };
