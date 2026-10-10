@@ -1939,7 +1939,7 @@ function App() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+        <div className="header-actions" style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           {user ? (
             <>
               {user.role === "admin" ? (
