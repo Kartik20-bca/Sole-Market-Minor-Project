@@ -425,10 +425,29 @@ function App() {
           });
 
           // Give each product a fresh, distinct image, regardless of old database URLs.
-          const transformedWithFreshImages = transformed.map((item, idx) => ({
-            ...item,
-            imageUrl: FRESH_SHOE_IMAGES[idx % FRESH_SHOE_IMAGES.length],
-          }));
+          const transformedWithFreshImages = transformed.map((item, idx) => {
+            const identity = `${item.name || ""} ${item.brand || ""}`.toLowerCase();
+
+            // Explicit per-product mappings take priority over the rotating image list.
+            if (identity.includes("vortex aero 1") || identity.includes("pure obsidian") || identity.includes("force 1")) {
+              return {
+                ...item,
+                imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=90",
+              };
+            }
+
+            if (identity.includes("shadow forge") || identity.includes("dark onyx") || identity.includes("boost")) {
+              return {
+                ...item,
+                imageUrl: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=90",
+              };
+            }
+
+            return {
+              ...item,
+              imageUrl: FRESH_SHOE_IMAGES[idx % FRESH_SHOE_IMAGES.length],
+            };
+          });
 
           // Deduplicate transformed sneakers by name and append any missing curated items
           const seenNames = new Set();
