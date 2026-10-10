@@ -469,7 +469,29 @@ function App() {
             }
           }
 
-          setProducts(deduplicated);
+          // Apply image overrides to the FINAL catalog so API transformations,
+          // deduplication, and fallback products cannot overwrite these two images.
+          const finalCatalog = deduplicated.map((product) => {
+            const identity = `${product.name || ""} ${product.brand || ""} ${product.category || ""}`.toLowerCase();
+
+            if (identity.includes("vortex aero 1") || identity.includes("pure obsidian")) {
+              return {
+                ...product,
+                imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=90&v=2",
+              };
+            }
+
+            if (identity.includes("shadow forge") || identity.includes("dark onyx")) {
+              return {
+                ...product,
+                imageUrl: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1200&q=90&v=2",
+              };
+            }
+
+            return product;
+          });
+
+          setProducts(finalCatalog);
         } else {
           setProducts(DEFAULT_SNEAKERS);
         }
