@@ -544,53 +544,22 @@ function App() {
     }));
   };
 
-  const getStoredUsers = () => {
-    try {
-      const data = localStorage.getItem("solemarket_registered_users");
-      return data ? JSON.parse(data) : [];
-    } catch {
-      return [];
-    }
-  };
-
-  const saveLocalRegisteredUser = (userData, password) => {
-    try {
-      const users = getStoredUsers();
-      const cleanEmail = (userData.email || "").trim().toLowerCase();
-      const idx = users.findIndex(
-        (u) => (u.email || "").trim().toLowerCase() === cleanEmail
-      );
-      const entry = {
-        id: userData.id || userData._id || "usr_" + Date.now().toString(36),
-        name: userData.name || "Sole Sneakerhead",
-        email: cleanEmail,
-        role: userData.role || "user",
-        password: password || userData.password || "",
-        createdAt: userData.createdAt || new Date().toISOString(),
-      };
-      if (idx >= 0) {
-        users[idx] = { ...users[idx], ...entry };
-      } else {
-        users.push(entry);
-      }
-      localStorage.setItem("solemarket_registered_users", JSON.stringify(users));
-    } catch (e) {
-      console.warn("Could not cache user locally", e);
-    }
-  };
-
   const saveUserSession = (userObj, tokenStr) => {
+    if (!userObj || !tokenStr) {
+      throw new Error("The server did not return a valid login session.");
+    }
+
     const cleanUser = {
-      id: userObj.id || userObj._id || "usr_" + Date.now().toString(36),
+      id: userObj.id || userObj._id,
       name: userObj.name || (userObj.email ? userObj.email.split("@")[0] : "Sneakerhead"),
       email: (userObj.email || "").trim().toLowerCase(),
       role: userObj.role || "user",
     };
-    const activeToken = tokenStr || "token_" + Date.now().toString(36);
+
     localStorage.setItem("solemarket_user", JSON.stringify(cleanUser));
-    localStorage.setItem("solemarket_token", activeToken);
+    localStorage.setItem("solemarket_token", tokenStr);
     setUser(cleanUser);
-    setToken(activeToken);
+    setToken(tokenStr);
     setShowAuth(false);
     setAuthError("");
     setAuthForm({ name: "", email: "", password: "" });
@@ -617,173 +586,58 @@ function App() {
       return;
     }
 
-    if (!cleanPassword || cleanPassword.length < 4) {
-      setAuthError("Password must be at least 4 characters.");
+    if (cleanPassword.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
       return;
     }
 
-    // Direct Owner Authentication Check
-    if (authRoleTab === "owner") {
-      if (
-        cleanEmail === "admin@solemarket.com" &&
-        (cleanPassword === "Admin@12345" || cleanPassword.length >= 6)
-      ) {
-        loginAsDirectOwner();
-        return;
-      }
+    if (authRoleTab === "visitor" && authMode === "register" && !cleanName) {
+      setAuthError("Please enter your full name to create an account.");
+      return;
     }
 
     setAuthLoading(true);
-
-    // 1. VISITOR REGISTRATION FLOW
-    if (authRoleTab === "visitor" && authMode === "register") {
-      if (!cleanName) {
-        setAuthLoading(false);
-        setAuthError("Please enter your full name to create an account.");
-        return;
-      }
-
-      let registeredSuccessfully = false;
-
-      // Attempt remote backend registration first
-      try {
-        const res = await axios.post(
-          `${AUTH_URL}/register`,
-          {
-            name: cleanName,
-            email: cleanEmail,
-            password: cleanPassword,
-          },
-          { timeout: 3500 }
-        );
-
-        if (res.data?.user) {
-          const remoteUser = res.data.user;
-          const remoteToken = res.data.token || ("token_usr_" + Date.now().toString(36));
-          saveLocalRegisteredUser(remoteUser, cleanPassword);
-          saveUserSession(remoteUser, remoteToken);
-          registeredSuccessfully = true;
-          alert(`🎉 Welcome to Sole Market, ${remoteUser.name || cleanName}! Your account has been created.`);
-          return;
-        }
-      } catch (remoteErr) {
-        console.warn("Remote register API unavailable, utilizing local account engine.", remoteErr);
-      }
-
-      // Local account creation fallback
-      if (!registeredSuccessfully) {
-        const localUsers = getStoredUsers();
-        const existing = localUsers.find(
-          (u) => (u.email || "").trim().toLowerCase() === cleanEmail
-        );
-
-        if (existing) {
-          // If already exists, log in seamlessly
-          const userToken = "token_usr_" + Date.now().toString(36);
-          saveUserSession(existing, userToken);
-          alert(`🎉 Welcome back, ${existing.name}! You are now signed in.`);
-        } else {
-          const newUser = {
-            id: "usr_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
-            name: cleanName,
-            email: cleanEmail,
-            role: "user",
-            password: cleanPassword,
-            createdAt: new Date().toISOString(),
-          };
-          saveLocalRegisteredUser(newUser, cleanPassword);
-          const userToken = "token_usr_" + Date.now().toString(36);
-          saveUserSession(newUser, userToken);
-          alert(`🎉 Welcome to Sole Market, ${newUser.name}! Your account has been created successfully.`);
-        }
-      }
-      setAuthLoading(false);
-      return;
-    }
-
-    // 2. VISITOR / OWNER LOGIN FLOW
-    let loggedIn = false;
-
     try {
-      const endpoint = `${AUTH_URL}/login`;
-      const res = await axios.post(
-        endpoint,
-        {
-          email: cleanEmail,
-          password: cleanPassword,
-        },
-        { timeout: 3500 }
-      );
+      const isRegistering = authRoleTab === "visitor" && authMode === "register";
+      const endpoint = isRegistering ? `${AUTH_URL}/register` : `${AUTH_URL}/login`;
+      const payload = isRegistering
+        ? { name: cleanName, email: cleanEmail, password: cleanPassword }
+        : { email: cleanEmail, password: cleanPassword };
 
-      if (res.data?.user && res.data?.token) {
-        saveUserSession(res.data.user, res.data.token);
-        loggedIn = true;
+      const res = await axios.post(endpoint, payload, { timeout: 15000 });
+      const returnedUser = res.data?.user;
+      const returnedToken = res.data?.token;
+
+      if (!returnedUser || !returnedToken) {
+        throw new Error("The server did not return a valid login session.");
+      }
+
+      if (authRoleTab === "owner" && returnedUser.role !== "admin") {
+        setAuthError("This account does not have owner permissions.");
         return;
       }
-    } catch (apiError) {
-      console.warn("Remote login API unavailable, verifying local credentials.", apiError);
-    }
 
-    if (!loggedIn) {
-      if (authRoleTab === "owner") {
-        if (cleanEmail === "admin@solemarket.com" || cleanPassword === "Admin@12345") {
-          loginAsDirectOwner();
-          setAuthLoading(false);
-          return;
-        } else {
-          setAuthError("Invalid Owner credentials. Use admin@solemarket.com / Admin@12345");
-          setAuthLoading(false);
-          return;
-        }
+      if (authRoleTab === "visitor" && returnedUser.role === "admin") {
+        setAuthError("Please use the Owner / Developer tab for this account.");
+        return;
       }
 
-      // Check registered users locally
-      const localUsers = getStoredUsers();
-      const existingUser = localUsers.find(
-        (u) => (u.email || "").trim().toLowerCase() === cleanEmail
-      );
-
-      if (existingUser) {
-        if (existingUser.password && existingUser.password !== cleanPassword) {
-          setAuthError("Incorrect password. Please verify and try again.");
-          setAuthLoading(false);
-          return;
-        }
-        const userToken = "token_usr_" + Date.now().toString(36);
-        saveUserSession(existingUser, userToken);
+      saveUserSession(returnedUser, returnedToken);
+      if (isRegistering) {
+        alert(`Welcome to Sole Market, ${returnedUser.name || cleanName}! Your account has been created.`);
+      }
+    } catch (error) {
+      const serverMessage = error.response?.data?.message;
+      if (error.code === "ECONNABORTED") {
+        setAuthError("The server is taking too long to respond. Please try again.");
+      } else if (!error.response) {
+        setAuthError("Unable to connect to Sole Market. Please try again in a moment.");
       } else {
-        // Auto-provision visitor account so users are never locked out
-        const namePart = cleanEmail.split("@")[0].replace(/[._-]/g, " ");
-        const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-        const autoUser = {
-          id: "usr_" + Date.now().toString(36),
-          name: formattedName || "Sneakerhead",
-          email: cleanEmail,
-          role: "user",
-          password: cleanPassword,
-        };
-        saveLocalRegisteredUser(autoUser, cleanPassword);
-        const userToken = "token_usr_" + Date.now().toString(36);
-        saveUserSession(autoUser, userToken);
+        setAuthError(serverMessage || "Authentication failed. Please check your details.");
       }
+    } finally {
+      setAuthLoading(false);
     }
-
-    setAuthLoading(false);
-  };
-
-  const loginAsDirectOwner = () => {
-    const ownerUser = {
-      id: "owner_admin_solemarket",
-      name: "Sole Market Owner & Dev",
-      email: "admin@solemarket.com",
-      role: "admin",
-    };
-    const devToken = "solemarket_dev_owner_token_auth";
-    localStorage.setItem("solemarket_user", JSON.stringify(ownerUser));
-    localStorage.setItem("solemarket_token", devToken);
-    setUser(ownerUser);
-    setToken(devToken);
-    setShowAuth(false);
   };
 
   const loginAsGuestVisitor = () => {
